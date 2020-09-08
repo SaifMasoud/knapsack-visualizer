@@ -16,6 +16,9 @@ class DPQTableWidget(QTableWidget):
         super().__init__(rows, cols)
         self.highlighted = []
         self.cur = None
+        self.setVerticalHeaderLabels([str(i) for i in range(SIZE+1)]) # make the rows start at 0->SIZE
+        self.setHorizontalHeaderLabels([' ' + str(i) for i in range(NUM_ITEMS+1)])
+
     
     def event(self, e):
         if e.type() != QEvent.MouseButtonPress and e.type() != QEvent.KeyPress:
@@ -23,7 +26,7 @@ class DPQTableWidget(QTableWidget):
         super().event(e)
         # Reveal
         if self.hasFocus() and self.selectedItems():
-            print("revealing", self.selectedItems()[0].row(), self.selectedItems()[0].column())
+            print("\nrevealing", self.selectedItems()[0].row(), self.selectedItems()[0].column())
             print("Currently Highlighted: ", self.highlighted)
             selected = self.selectedItems()[0]
             if selected: self.reveal(selected)
@@ -44,31 +47,47 @@ class DPQTableWidget(QTableWidget):
         selected.setText(str(KS.dp[row][col]))
         self.cur = selected
         pars = self.table_pars(selected)
-        for par in pars:
-            if len(pars) > 2: print("AAAA")
-            self.highlight(par)
+        self.highlight(pars)
         self.highlighted.extend(pars)
     
     def unhighlight(self):
         if self.highlighted:
-            self.highlighted[0].setBackground(QColor("Green")); self.highlighted[1].setBackground(QColor("Green"))
+            for par in self.highlighted:
+                par.setBackground(QColor("Green"))
             self.highlighted = []
 
     def table_pars(self, selected):
         row, col = selected.row(), selected.column()
-        par1_r, par1_c,  = KS.dp_parents(row, col)[0]
-        par2_r, par2_c = KS.dp_parents(row, col)[1]
-        par1 = self.item(par1_r, par1_c)
-        par2 = self.item(par2_r, par2_c)
-        pars = par1, par2
-        return [par for par in pars if par]
+        try:
+            par1_r, par1_c  = KS.dp_parents(row, col)[0]
+            par2_r, par2_c = KS.dp_parents(row, col)[1]
+            par1 = self.item(par1_r, par1_c)
+            par2 = self.item(par2_r, par2_c)
+            pars = par1, par2
+            return [par for par in pars if par]
+        except TypeError: # means there is only 1 par
+            row, col = KS.dp_parents(row, col)
+            return [self.item(row, col)]
+
 
     
-    def highlight(self, par):
-        row, col = par.row(), par.column()
-        par.setText(str(KS.dp[row][col]))
-        par.setBackground(QColor("Yellow"))
+    def highlight(self, pars):
+        for par in pars:
+            par.setText(str(KS.dp[par.row()][par.column()]))
+        if not pars: return
+        if len(pars)==1: pars[0].setBackground(QColor("Yellow")); return
 
+        par1, par2 = pars[0], pars[1]
+        # par 2 is *taken* in KS.dp
+        par2_score = KS.dp[par2.row()][par2.column()] + int(self.cur.data(0))
+        par1_score = KS.dp[par1.row()][par1.column()]
+
+        if par2_score > par1_score:
+            par2.setBackground(QColor("Yellow"))
+            par1.setBackground(QColor("Red"))
+        else:
+            par1.setBackground(QColor("Red"))
+            par2.setBackground(QColor("Yellow"))
 
     def set_all_0(self):
         for row in range(self.rowCount()):
@@ -81,7 +100,7 @@ class Window(QWidget):
         super().__init__()
         self.title = "anki_ocr_gui"
         self.initUI()
-        self.setGeometry(100, 100, 800 ,600)
+        self.setGeometry(100, 100, 800, 600)
 
     def initUI(self):
         # Creating our widgets
@@ -90,8 +109,6 @@ class Window(QWidget):
         self.cwd_label = QLabel("Press Done To Show Solution")
 
         self.dp_table = DPQTableWidget(SIZE+1, NUM_ITEMS+1)
-        self.dp_table.setVerticalHeaderLabels([str(i) for i in range(0, SIZE+1)]) # make the rows start at 0->SIZE
-        self.dp_table.setHorizontalHeaderLabels([str(i) for i in range(0, NUM_ITEMS+1)])
         self.cleardp_btn = QPushButton("Clear Solution")
 
         # Gathering the widgets in a layout
@@ -114,7 +131,7 @@ class Window(QWidget):
 
     def on_cleardp_btn(self):
         self.dp_table.set_all_0()
-        QMessageBox.about(self, "Usage", "Focus a table slot to show its solution")
+        QMessageBox.about(self, "Usage", "Focus a table slot using Keyboard to show its solution. Row count indicates KnapSack Size.")
         
 
 
@@ -149,7 +166,6 @@ class Window(QWidget):
 
         
         # Clean
-        # KS.items = []; KS.size = SIZE
         self.items_table.clearContents()
 
 if __name__ == '__main__':

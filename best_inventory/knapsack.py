@@ -43,7 +43,7 @@ class KnapSack(object):
     def dp_parents(self, row, col):
         if row>= self.items[col].weight:
             return (row, col-1), (row-self.items[col].weight, col-1)
-        return (row, col-1), (row, col-1)
+        return (row, col-1)
 
 
 class KSItem(object):

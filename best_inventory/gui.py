@@ -21,9 +21,9 @@ class DPQTableWidget(QTableWidget):
 
     
     def event(self, e):
-        if e.type() != QEvent.MouseButtonPress and e.type() != QEvent.KeyPress:
-            return True
         super().event(e)
+        if e.type() != QEvent.MouseButtonRelease and e.type() != QEvent.KeyPress:
+            return True
         # Reveal
         if self.hasFocus() and self.selectedItems():
             print("\nrevealing", self.selectedItems()[0].row(), self.selectedItems()[0].column())
@@ -51,9 +51,12 @@ class DPQTableWidget(QTableWidget):
         self.highlighted.extend(pars)
     
     def unhighlight(self):
-        if self.highlighted:
-            for par in self.highlighted:
-                par.setBackground(QColor("Green"))
+        try:
+            if self.highlighted:
+                for par in self.highlighted:
+                    par.setBackground(QColor("Green"))
+                self.highlighted = []
+        except RuntimeError: # Usually is the item being deleted due to new items
             self.highlighted = []
 
     def table_pars(self, selected):
@@ -86,8 +89,8 @@ class DPQTableWidget(QTableWidget):
             par2.setBackground(QColor("Yellow"))
             par1.setBackground(QColor("Red"))
         else:
-            par1.setBackground(QColor("Red"))
-            par2.setBackground(QColor("Yellow"))
+            par2.setBackground(QColor("Red"))
+            par1.setBackground(QColor("Yellow"))
 
     def set_all_0(self):
         for row in range(self.rowCount()):

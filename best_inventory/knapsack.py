@@ -28,6 +28,7 @@ class KnapSack(object):
         return dp
 
     def _build_from_lists(self, weights, values, size, filenames=None):
+        self.items = []
         if not filenames: filenames = [None] * len(weights)
         for w, v, f in zip(weights, values, filenames):
             self.items.append(KSItem(w, v, f))
@@ -42,7 +43,7 @@ class KnapSack(object):
 
     def dp_parents(self, row, col):
         if row>= self.items[col].weight:
-            return (row, col-1), (row-self.items[col].weight, col-1)
+            return (row, col-1), (row-self.items[col].weight, col-1), 
         return (row, col-1)
 
 

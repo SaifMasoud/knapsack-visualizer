@@ -12,7 +12,7 @@ MAX_SIZE = 10
 MAX_ITEMS = 10
 SIZE = 5
 NUM_ITEMS = 3
-ITEM_HEADERS = ['Name', 'Weight', 'Value', 'Icon']
+ITEM_HEADERS = ['Name', 'Weight', 'Value']
  
 def widgets_to_QHBoxLayout(widgets):
     hbox = QHBoxLayout()
@@ -38,7 +38,7 @@ class DPQTableWidget(QTableWidget):
         # Reveal
         if self.hasFocus() and self.selectedItems():
             print("\nrevealing", self.selectedItems()[0].row(), self.selectedItems()[0].column())
-            print("Currently Highlighted: ", self.highlighted)
+            print("Was Highlighted: ", self.highlighted)
             selected = self.selectedItems()[0]
             if selected: self.reveal(selected)
             print("Now Highlighted: ", self.highlighted)
@@ -66,6 +66,7 @@ class DPQTableWidget(QTableWidget):
             if self.highlighted:
                 for par in self.highlighted:
                     par.setBackground(QColor("Green"))
+                    # par.setBackground(QColor("White"))
                 self.highlighted = []
         except RuntimeError: # Usually is the item being deleted due to new items
             self.highlighted = []
@@ -119,7 +120,7 @@ class Window(QWidget):
 
     def initUI(self):
         # Creating our widgets
-        self.items_table = QTableWidget(NUM_ITEMS, 4); self.items_table.setHorizontalHeaderLabels(ITEM_HEADERS)
+        self.items_table = QTableWidget(NUM_ITEMS, len(ITEM_HEADERS)); self.items_table.setHorizontalHeaderLabels(ITEM_HEADERS)
         self.done_label = QLabel("Press Done To Show Solution"); self.done_btn = QPushButton('Done')
         self.size_label = QLabel("Size"); self.size_box = QComboBox(); self.size_box.addItems([str(i) for i in range(1, MAX_SIZE+1)])
         self.items_label = QLabel("Num. Items"); self.items_box = QComboBox(); self.items_box.addItems([str(i) for i in range(1, MAX_ITEMS+1)])
@@ -166,7 +167,7 @@ class Window(QWidget):
 
     def on_cleardp_btn(self):
         self.dp_table.set_all_0()
-        QMessageBox.about(self, "Usage", "Focus a table slot using Keyboard to show its solution. Row count indicates KnapSack Size.")
+        QMessageBox.about(self, "Usage", "Row number represent capacity for that row. Columns represent the items (A column can include its own item and any items to its left.). Use Arrow Keys to reveal the solutions.\n\nGreen: Solved\nYellow: Better option\nRed: Worse option.\nFollow the yellow from a cell to trace back the solution, straight left means to skip an item and left+up means to take the current item.")
         
 
 

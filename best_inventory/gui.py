@@ -5,11 +5,22 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtCore import QEvent
 import knapsack
 from pprint import pprint
+import numpy as np
 
 KS = knapsack.KnapSack()
+MAX_SIZE = 10
+MAX_ITEMS = 10
 SIZE = 5
 NUM_ITEMS = 3
+ITEM_HEADERS = ['Name', 'Weight', 'Value', 'Icon']
  
+def widgets_to_QHBoxLayout(widgets):
+    hbox = QHBoxLayout()
+    for widget in widgets:
+        hbox.addWidget(widget)
+    return hbox
+
+
 class DPQTableWidget(QTableWidget):
 
     def __init__(self, rows, cols):
@@ -95,21 +106,24 @@ class DPQTableWidget(QTableWidget):
     def set_all_0(self):
         for row in range(self.rowCount()):
             for col in range(self.columnCount()):
-                self.item(row, col).setText('0')
+                zero_item = QTableWidgetItem(); zero_item.setText('0')
+                self.setItem(row, col, zero_item) 
                 self.item(row, col).setBackground(QColor("White"))
 
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = "anki_ocr_gui"
+        self.title = "best_inventory"
         self.initUI()
         self.setGeometry(100, 100, 800, 600)
 
     def initUI(self):
         # Creating our widgets
-        self.items_table = QTableWidget(NUM_ITEMS, 4); self.items_table.setHorizontalHeaderLabels(['Name', 'Weight', 'Value', 'Icon'])
-        self.done_btn = QPushButton('Done')
-        self.cwd_label = QLabel("Press Done To Show Solution")
+        self.items_table = QTableWidget(NUM_ITEMS, 4); self.items_table.setHorizontalHeaderLabels(ITEM_HEADERS)
+        self.done_label = QLabel("Press Done To Show Solution"); self.done_btn = QPushButton('Done')
+        self.size_label = QLabel("Size"); self.size_box = QComboBox(); self.size_box.addItems([str(i) for i in range(1, MAX_SIZE+1)])
+        self.items_label = QLabel("Num. Items"); self.items_box = QComboBox(); self.items_box.addItems([str(i) for i in range(1, MAX_ITEMS+1)])
+        self.middle_row = widgets_to_QHBoxLayout([self.done_label, self.done_btn, self.size_label, self.size_box, self.items_label, self.items_box])
 
         self.dp_table = DPQTableWidget(SIZE+1, NUM_ITEMS+1)
         self.cleardp_btn = QPushButton("Clear Solution")
@@ -117,19 +131,37 @@ class Window(QWidget):
         # Gathering the widgets in a layout
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.items_table)
-        self.layout.addWidget(self.done_btn)
-        self.layout.addWidget(self.cwd_label)
+        self.layout.addLayout(self.middle_row)
         self.layout.addWidget(self.dp_table)
         self.layout.addWidget(self.cleardp_btn)
 
         # Connecting the buttons to their functions
         self.done_btn.clicked.connect(self.on_done_btn)
         self.cleardp_btn.clicked.connect(self.on_cleardp_btn)
+        self.size_box.currentIndexChanged.connect(self.on_size_change)
+        self.items_box.currentIndexChanged.connect(self.on_items_change)
 
         # Adding our widgets to the window then showing the window
         self.setLayout(self.layout)
         self.show()
+    
+    def on_items_change(self):
+        global NUM_ITEMS
+        NUM_ITEMS = self.items_box.currentIndex() + 1
+        self.items_table.setRowCount(NUM_ITEMS)
+        self.dp_table.setColumnCount(NUM_ITEMS+1)
 
+    def on_size_change(self):
+        global SIZE
+        SIZE = self.size_box.currentIndex() + 1
+        self.dp_table.setRowCount(SIZE+1)
+        self.dp_table.setVerticalHeaderLabels([str(i) for i in range(SIZE+1)])
+        if KS.dp:
+            # Update solution
+            self.dp_table.set_all_0()
+            KS.size = SIZE
+            print(np.matrix(KS.dp))
+            KS.solve()
 
 
     def on_cleardp_btn(self):

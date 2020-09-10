@@ -11,7 +11,8 @@ class KnapSack(object):
 
     def solve(self):
         # Stores solution table in self.dp
-        self.items = [KSItem(0, 0)] + self.items # Make self.items start at 1 (0 stands for no items)
+        if not (self.items[0].weight == 0 and self.items[0].value == 0):
+            self.items = [KSItem(0, 0)] + self.items # Make self.items start at 1 (0 stands for no items)
 
         # Initialize a mxn table where m=self.size and n=len(self.items)
         dp = [[0 for i in range(len(self.items))]

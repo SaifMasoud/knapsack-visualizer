@@ -136,7 +136,7 @@ class DPQTableWidget(QTableWidget):
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = "best_inventory"
+        self.title = "KnapSack Visualizer"
         self.initUI()
         self.setGeometry(100, 100, 800, 600)
 

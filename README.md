@@ -6,7 +6,7 @@ KnapSack Visualizer lets you visualize & trace solutions to the knapsack problem
 - You must have PyQt5 installed. [Link](https://doc.bccnsoft.com/docs/PyQt5/installation.html)
 ```bash
 pip3 install PyQt5
-git clone github.com/madelesi/knapsack-visualizer
+git clone https://github.com/madelesi/knapsack-visualizer.git
 cd knapsack-visualizer/knapsack_visualizer
 python3 gui.py
  ```

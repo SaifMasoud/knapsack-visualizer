@@ -56,9 +56,8 @@ class KSItem(object):
         self.filename = filename
 
 if __name__ == '__main__':
-    import numpy as np;
     ks = KnapSack()
     ks._build_from_lists([1,2,3], [6,10,12], 5)
     ks.solve()
-    TMP = np.matrix(ks.dp)
+    TMP = ks.dp
     print(TMP)

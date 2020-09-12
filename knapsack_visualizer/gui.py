@@ -33,9 +33,9 @@ class Window(QMainWindow):
         self.ui.items_table.setColumnCount(len(ITEM_HEADERS))
         self.ui.items_table.setHorizontalHeaderLabels(ITEM_HEADERS)
         self.ui.dp_table.setRowCount(DEFAULT_SIZE+1)
-        self.ui.dp_table.setColumnCount(DEFAULT_ITEMS+1)
+        self.ui.dp_table.setColumnCount(DEFAULT_ITEMS)
         self.ui.dp_table.setVerticalHeaderLabels([str(i) for i in range(DEFAULT_SIZE + 1)])  # make the rows start at 0->SIZE
-        self.ui.dp_table.setHorizontalHeaderLabels([" " + str(i) for i in range(DEFAULT_ITEMS + 1)])
+        self.ui.dp_table.setHorizontalHeaderLabels([" " + str(i) for i in range(DEFAULT_ITEMS)])
         self.ui.size_box.addItems([str(i) for i in range(1, MAX_SIZE + 1)])
         self.ui.items_box.addItems([str(i) for i in range(1, MAX_ITEMS + 1)])
 
@@ -48,7 +48,7 @@ class Window(QMainWindow):
     def on_items_change(self):
         self.num_items = self.items_box.currentIndex() + 1
         self.items_table.setRowCount(self.num_items)
-        self.dp_table.setColumnCount(self.num_items + 1)
+        self.dp_table.setColumnCount(self.num_items)
 
     def on_size_change(self):
         self.ks_size = self.ui.size_box.currentIndex() + 1

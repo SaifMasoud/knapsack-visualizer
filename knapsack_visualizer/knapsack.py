@@ -10,13 +10,11 @@ class KnapSack(object):
         self.dp = []
 
     def solve(self):
-        # Stores solution table in self.dp
-        if not (self.items[0].weight == 0 and self.items[0].value == 0):
-            self.items = [KSItem(0, 0)] + self.items # Make self.items start at 1 (0 stands for no items)
-
         # Initialize a mxn table where m=self.size and n=len(self.items)
         dp = [[0 for i in range(len(self.items))]
               for s in range(self.size+1)]
+        for s in range(self.size+1):
+            dp[s][0] = self.items[0].value if self.items[0].weight <= s else 0
 
         for i in range(1, len(self.items)):
             for s in range(self.size+1):
@@ -35,13 +33,6 @@ class KnapSack(object):
             self.items.append(KSItem(w, v, f))
         self.size = size
     
-    def _verify_items(self):
-        item_0 = self.items[0]; item_1 = self.items[1]
-        # Checking that item 0 is dummy and item 1 is not
-        if (item_0.weight == 0 and item_0.value == 0) and (item_1.weight != 0):
-            return 0
-        raise ValueError
-
     def dp_parents(self, row, col):
         if row>= self.items[col].weight:
             return (row, col-1), (row-self.items[col].weight, col-1), 
@@ -60,4 +51,4 @@ if __name__ == '__main__':
     ks._build_from_lists([1,2,3], [6,10,12], 5)
     ks.solve()
     TMP = ks.dp
-    print(TMP)
+    import numpy as np; print(np.matrix(TMP));print(TMP)

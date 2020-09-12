@@ -1,5 +1,5 @@
 from window_auto import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QTableWidgetItem, QMessageBox
 import knapsack
 import sys
 
@@ -46,9 +46,9 @@ class Window(QMainWindow):
         self.ui.items_box.currentIndexChanged.connect(self.on_items_change)
 
     def on_items_change(self):
-        self.num_items = self.items_box.currentIndex() + 1
-        self.items_table.setRowCount(self.num_items)
-        self.dp_table.setColumnCount(self.num_items)
+        self.num_items = self.ui.items_box.currentIndex() + 1
+        self.ui.items_table.setRowCount(self.num_items)
+        self.ui.dp_table.setColumnCount(self.num_items)
 
     def on_size_change(self):
         self.ks_size = self.ui.size_box.currentIndex() + 1

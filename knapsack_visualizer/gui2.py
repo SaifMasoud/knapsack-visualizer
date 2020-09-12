@@ -51,10 +51,10 @@ class Window(QMainWindow):
         self.dp_table.setColumnCount(self.num_items + 1)
 
     def on_size_change(self):
-        self.ks_size = self.size_box.currentIndex() + 1
+        self.ks_size = self.ui.size_box.currentIndex() + 1
         self.ui.dp_table.setRowCount(self.ks_size + 1)
-        self.ui.dp_table.setVerticalHeaderLabels([str(i) for i in range(SIZE + 1)])
-        if self.ks.dp:
+        self.ui.dp_table.setVerticalHeaderLabels([str(i) for i in range(self.ks_size + 1)])
+        if self.knapsack.dp:
             # Update solution
             self.ui.dp_table.set_all_0()
             self.knapsack.size = self.ks_size
@@ -109,7 +109,7 @@ class Window(QMainWindow):
                 cur_item.setText(str(self.knapsack.dp[row][col]))
                 self.ui.dp_table.setItem(row, col, cur_item)
 
-        # Update dp header (Icon or Values?)
+        # Update dp header (Weights Values for each item)
         self.ui.dp_table.setHorizontalHeaderLabels(
             [(f"W: {str(item.weight)} V: {str(item.value)}") for item in self.knapsack.items]
         )

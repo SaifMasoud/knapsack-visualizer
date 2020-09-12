@@ -69,7 +69,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "KnapSack Visualizer"))
         self.done_label.setText(_translate("MainWindow", "Press Done to display solution"))
         self.done_btn.setText(_translate("MainWindow", "Done"))
         self.size_label.setText(_translate("MainWindow", "Size"))

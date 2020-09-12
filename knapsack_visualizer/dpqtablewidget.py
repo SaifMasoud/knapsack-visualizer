@@ -59,39 +59,19 @@ class DPQTableWidget(QTableWidget):
 
     def table_pars(self, selected):
         row, col = selected.row(), selected.column()
-        try:
-            par1_r, par1_c = self.knapsack.dp_parents(row, col)[0]
-            par2_r, par2_c = self.knapsack.dp_parents(row, col)[1]
-            par1 = self.item(par1_r, par1_c)
-            par2 = self.item(par2_r, par2_c)
-            pars = par1, par2
-            return [par for par in pars if par is not None]
-        except TypeError:  # means there is only 1 par
-            row, col = self.knapsack.dp_parents(row, col)
-            return [self.item(row, col)]
+        pars = self.knapsack.dp_parents_sorted(row, col)
+        print("PARS: ", pars)
+        par_table_items = [self.item(par[0], par[1]) for par in pars]
+        return par_table_items
 
-    def highlight(self, pars):
-        for par in pars:
+    def highlight(self, par_table_items):
+        if len(par_table_items)==0: return
+        # Reveal the table cell scores & color the parents Yellow(Higher score) & Red(Lower score) 
+        for par in par_table_items:
             par.setText(str(self.knapsack.dp[par.row()][par.column()]))
-        if not pars:
-            return
-        if len(pars) == 1:
-            pars[0].setBackground(QColor("Yellow"))
-            return
-
-        par1, par2 = pars[0], pars[1]
-        # par 2 is *taken* in self.knapsack.dp
-        par2_score = (
-            self.knapsack.dp[par2.row()][par2.column()] + self.knapsack.items[self.cur.column()].value
-        )
-        par1_score = self.knapsack.dp[par1.row()][par1.column()]
-
-        if par2_score > par1_score:
-            par2.setBackground(QColor("Yellow"))
-            par1.setBackground(QColor("Red"))
-        else:
-            par2.setBackground(QColor("Red"))
-            par1.setBackground(QColor("Yellow"))
+        par_table_items[0].setBackground(QColor("Yellow"))
+        if len(par_table_items) == 2:
+            par_table_items[1].setBackground(QColor("Red"))
 
     def set_all_0(self):
         for row in range(self.rowCount()):

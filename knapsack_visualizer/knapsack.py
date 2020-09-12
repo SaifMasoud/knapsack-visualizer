@@ -8,6 +8,7 @@ class KnapSack(object):
         self.items = items
         self.size = size
         self.dp = []
+        self.pars = {}
 
     def solve(self):
         # Initialize a mxn table where m=self.size and n=len(self.items)
@@ -19,9 +20,11 @@ class KnapSack(object):
         for i in range(1, len(self.items)):
             for s in range(self.size+1):
                 taken, not_taken = 0, dp[s][i-1]
-                # self.items is 0-indexed as usual, but in self.dp 0 means 0 items. (dp[i] <-> items[i-1])
+                self.pars[s, i] = [(s, i-1)]
                 if s >= self.items[i].weight:
                     taken = self.items[i].value + dp[s-self.items[i].weight][i-1]
+                    temp_pars = [(s, i-1), (s-self.items[i].weight, i-1)]
+                    self.pars[s, i] = temp_pars if not_taken>taken else list(reversed(temp_pars))
                 dp[s][i] = max(taken, not_taken)
         self.dp = dp
         return dp
@@ -33,10 +36,8 @@ class KnapSack(object):
             self.items.append(KSItem(w, v, f))
         self.size = size
     
-    def dp_parents(self, row, col):
-        if row>= self.items[col].weight:
-            return (row, col-1), (row-self.items[col].weight, col-1), 
-        return (row, col-1)
+    def dp_parents_sorted(self, row, col):
+        return self.pars.get((row, col), [])
 
 
 class KSItem(object):
@@ -50,5 +51,6 @@ if __name__ == '__main__':
     ks = KnapSack()
     ks._build_from_lists([1,2,3], [6,10,12], 5)
     ks.solve()
-    TMP = ks.dp
-    import numpy as np; print(np.matrix(TMP));print(TMP)
+    print(ks.dp)
+    print()
+    print(ks.pars)

@@ -40,7 +40,7 @@ class DPQTableWidget(QTableWidget):
             self.unhighlight()
 
         # Reveal & highlight parents
-        selected.setBackground(QColor("Green"))
+        selected.setBackground(QColor("Light Grey"))
         selected.setText(str(self.knapsack.dp[row][col]))
         self.cur = selected
         pars = self.table_pars(selected)
@@ -51,8 +51,7 @@ class DPQTableWidget(QTableWidget):
         try:
             if self.highlighted:
                 for par in self.highlighted:
-                    par.setBackground(QColor("Green"))
-                    # par.setBackground(QColor("White"))
+                    par.setBackground(QColor("Light Grey"))
                 self.highlighted = []
         except RuntimeError:  # Usually is the item being deleted due to new items
             self.highlighted = []

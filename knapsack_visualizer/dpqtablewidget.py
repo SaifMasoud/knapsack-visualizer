@@ -7,6 +7,7 @@ class DPQTableWidget(QTableWidget):
         super().__init__(layout)
         self.highlighted = []
         self.cur = None
+        self.window = None
         # self.setVerticalHeaderLabels([str(i) for i in range(SIZE + 1)])  # make the rows start at 0->SIZE
         # self.setHorizontalHeaderLabels([" " + str(i) for i in range(NUM_ITEMS + 1)])
 
@@ -41,11 +42,13 @@ class DPQTableWidget(QTableWidget):
 
         # Reveal & highlight parents
         selected.setBackground(QColor("Light Grey"))
-        selected.setText(str(self.knapsack.dp[row][col]))
+        selected.setText(self.window.alg.get_cell_value(row, col))
         self.cur = selected
-        pars = self.table_pars(selected)
-        self.highlight(pars)
-        self.highlighted.extend(pars)
+        cur_pars = self.window.alg.get_cell_parents(row, col)
+        print(f"cur_pars: {cur_pars}")
+        pars_qtable_elems = [self.item(par[0], par[1]) for par in cur_pars] # gets the QTableWidgetItem from its row and col
+        self.highlight(pars_qtable_elems)
+        self.highlighted.extend(pars_qtable_elems)
 
     def unhighlight(self):
         try:
@@ -56,21 +59,13 @@ class DPQTableWidget(QTableWidget):
         except RuntimeError:  # Usually is the item being deleted due to new items
             self.highlighted = []
 
-    def table_pars(self, selected):
-        row, col = selected.row(), selected.column()
-        pars = self.knapsack.dp_parents_sorted(row, col)
-        print("PARS: ", pars)
-        par_table_items = [self.item(par[0], par[1]) for par in pars]
-        return par_table_items
-
     def highlight(self, par_table_items):
         if len(par_table_items)==0: return
         # Reveal the table cell scores & color the parents Yellow(Higher score) & Red(Lower score) 
         for par in par_table_items:
-            par.setText(str(self.knapsack.dp[par.row()][par.column()]))
-        par_table_items[0].setBackground(QColor("Yellow"))
-        if len(par_table_items) == 2:
-            par_table_items[1].setBackground(QColor("Red"))
+            par.setText(self.window.alg.get_cell_value(par.row(), par.column()))
+            par.setBackground(QColor("Red"))
+        par_table_items[0].setBackground(QColor("Yellow")) # the first parent is the correct one. (Color it yellow not red).
 
     def set_all_0(self):
         for row in range(self.rowCount()):

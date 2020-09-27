@@ -39,25 +39,19 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="done_label">
-          <property name="text">
-           <string>Press Done (or CTRL+D) to display solution</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="done_btn">
-          <property name="text">
-           <string>Done</string>
-          </property>
-          <property name="shortcut">
-           <string>Ctrl+D</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QLabel" name="label_2">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>NOTE: Use Arrow Keys to move around table. Mouse clicks are ignored when visualizing the solutions.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
       </item>
       <item>
        <widget class="DPQTableWidget" name="dp_table"/>
@@ -79,7 +73,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

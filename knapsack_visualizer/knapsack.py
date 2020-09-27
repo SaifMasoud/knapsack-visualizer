@@ -90,7 +90,7 @@ class KnapSack(BaseDPAlgorithm):
     def build_and_solve(self, weights, values, size, filenames=None):
         self._build_from_lists(weights, values, size, filenames)
         self.solve()
-        self.gui_horizontal_headers = [str(item.weight) for item in self.items]
+        self.gui_horizontal_headers = [str(item.value) for item in self.items]
         self.gui_vert_headers = [str(i) for i in range(self.size+1)]
     
     def dp_parents_sorted(self, row, col):

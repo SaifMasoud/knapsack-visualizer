@@ -5,4 +5,4 @@ sys.path.append(os.path.join(os.path.dirname(__file__)))
 sys.path.append("..") # Adds higher directory to python modules path, so we can import knapsack in our window files
 
 # Add other input windows here.
-import knapsack_input_window, lcs_input_window
+import knapsack_input_window, lcs_input_window, kslot_knapsack_input_window

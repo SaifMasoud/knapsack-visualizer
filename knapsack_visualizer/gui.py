@@ -6,7 +6,7 @@ from alg_input_windows import *
 import alg_input_windows
 
 # Constants
-ALG_TO_WIN = {"knapsack": knapsack_input_window.win, "lcs": lcs_input_window.win, "k_knapsack": None}
+ALG_TO_WIN = {"knapsack": knapsack_input_window.win, "lcs": lcs_input_window.win, "k_knapsack": kslot_knapsack_input_window.win}
 
 class Window(QMainWindow):
     def __init__(self):

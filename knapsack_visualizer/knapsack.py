@@ -120,8 +120,11 @@ class KSlotKnapSack:
         dp = [[[False for k in range(self.slots+1)] for i in range(len(self.weights))] for s in range(self.size+1)]
         dp[0][0][0] = True # using 0 takes, 0 size, no items, its Possible to do so.
         for col in range(1, len(self.weights)):
-            for row in range(1, self.size+1):
-                for k in range(1, self.slots+1):
+            for row in range(self.size+1):
+                for k in range(self.slots+1):
+                    if k==0==row: # We can get a knapsack filled with 0 slots if zero size.
+                        dp[row][col][k] = True
+                        continue
                     not_taken, taken = dp[row][col-1][k], False
                     if row >= self.weights[col]: # if we can take
                         taken = dp[row-self.weights[col]][col-1][k-1]

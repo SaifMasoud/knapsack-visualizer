@@ -1,9 +1,6 @@
-import numpy as np
-from pprint import pprint
 
-class BaseDPAlgorithm:
-    """Base Class for creating classes implementing dp-table algorithms. Inherit this class to make a consistent interface
-     for the GUI to use. Note: It is not required to inherit this as long as get_cell_value and get_cell_parents are implemented."""
+class ReplaceMeWithAnAlgorithm:
+    """Template for creating new algorithms that can be displayed in the GUI."""
     
     def __init__(self):
         self.dp = [] # You can use an array, dictionary, or something else to represent the dp table.
@@ -18,13 +15,16 @@ class BaseDPAlgorithm:
         """Should return row,col for all parent candidates, with the 1st one being the actual/best parent."""
         raise NotImplementedError
 
-class LCS(BaseDPAlgorithm):
+    def help_message(self):
+        return "Put Some message here to clarify your algorithm/table."
+
+class LCS():
     def __init__(self, s1, s2):
-        super().__init__()
         self.s1 = s1
         self.s2 = s2
         self.gui_horizontal_headers = ['-'] + list(s1)
         self.gui_vert_headers = ['-'] + list(s2)
+        self.pars = {}
         self.solve()
 
     def solve(self):
@@ -44,29 +44,35 @@ class LCS(BaseDPAlgorithm):
         self.dp = dp
     
     def get_cell_value(self, row, col):
-        return str(self.dp[row][col])
-
+        if row==0 or col==0:
+            return "0"
+        if self.pars[row, col]==(row-1, col-1):
+            return "^\\ " + str(self.dp[row][col])
+        elif self.pars[row, col] == (row-1, col):
+            return "↑ " + str(self.dp[row][col])
+        return "← " + str(self.dp[row][col])
     def get_cell_parents(self, row, col):
         if row==0 or col==0:
             return [(0, 0)]
+        return self._lcs_path()
         return [self.pars[row, col]]
     
     def _lcs_path(self):
         end = (len(self.s2), len(self.s1))
         cur = end
+        path = []
         while self.pars.get(cur, None) is not None:
             prev = cur
             cur = self.pars[cur]
-            if cur==(prev[0]-1, prev[1]-1): path.append(cur)
-        print(path[::-1])
+            if cur==(prev[0]-1, prev[1]-1): path.append(prev)
         return path[::-1]
 
-class KnapSack(BaseDPAlgorithm):
+class KnapSack():
     """Implements the KnapSack algorithm and stores data for GUI to make use of."""
 
     def __init__(self, weights, values, size=0):
-        super().__init__()
         self.items = []
+        self.pars = {}
         self.build_and_solve(weights, values, size)
 
     def solve(self):
@@ -150,9 +156,12 @@ class KSItem(object):
         self.filename = filename
 
 if __name__ == '__main__':
+    import numpy as np
+    from pprint import pprint
     ks = KnapSack([1,2,3], [6, 10, 12], 5)
     import numpy as np
     print(np.matrix(ks.dp))
 
     lcs = LCS("Hello", "Hillosoad")
     print(lcs._lcs_path())
+    print(lcs.pars)

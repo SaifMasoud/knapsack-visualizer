@@ -50,9 +50,17 @@ class LCS(BaseDPAlgorithm):
         if row==0 or col==0:
             return [(0, 0)]
         return [self.pars[row, col]]
+    
+    def _lcs_path(self):
+        end = (len(self.s2), len(self.s1))
+        cur = end
+        while self.pars.get(cur, None) is not None:
+            prev = cur
+            cur = self.pars[cur]
+            if cur==(prev[0]-1, prev[1]-1): path.append(cur)
+        print(path[::-1])
+        return path[::-1]
 
-
-        
 class KnapSack(BaseDPAlgorithm):
     """Implements the KnapSack algorithm and stores data for GUI to make use of."""
 
@@ -145,3 +153,6 @@ if __name__ == '__main__':
     ks = KnapSack([1,2,3], [6, 10, 12], 5)
     import numpy as np
     print(np.matrix(ks.dp))
+
+    lcs = LCS("Hello", "Hillosoad")
+    print(lcs._lcs_path())

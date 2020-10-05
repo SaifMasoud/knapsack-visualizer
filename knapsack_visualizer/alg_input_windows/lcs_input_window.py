@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QMainWindow, QWidget, QLineEdit, QPushButton, QLabel, QVBoxLayout
 from PyQt5.QtGui import QKeySequence
 import knapsack
 
 class win(QWidget):
 
-    def __init__(self, main_window):
+    def __init__(self, main_window: QMainWindow):
         super().__init__()
         self.main_window = main_window
         # widgets
@@ -24,7 +24,7 @@ class win(QWidget):
         self.vlayout.addWidget(self.done_btn)
         self.setLayout(self.vlayout)
         self.show()
-    
+        
     def on_done_btn(self):
         self.main_window.alg = knapsack.LCS(self.string1_input.text(), self.string2_input.text())
         self.main_window.update_dp_table()

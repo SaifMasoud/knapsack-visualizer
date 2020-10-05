@@ -46,7 +46,7 @@ class Window(QMainWindow):
         self.ui.dp_table.setVerticalHeaderLabels(self.alg.gui_vert_headers)
         self.ui.dp_table.set_all_0()
 
-        # Display in dp_table
+        # Display solution in dp_table
         for col in range(self.ui.dp_table.columnCount()):
             for row in range(self.ui.dp_table.rowCount()):
                 cur_item = QTableWidgetItem()

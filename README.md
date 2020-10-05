@@ -20,8 +20,7 @@ python3 gui.py
                 # gui_horizontal_headers/gui_vert_headers)
 ├── alg_input_windows
 │   ├── knapsack_input_window # make a similiar file that is a window, take in the main window(so you can change its .alg) as input and 
-│   └──                       # set its main_window.alg attribute to your own algorithm class (which you give arguments from your input 
-                              # window)
+│   └──                       # set its main_window.alg attribute to your own algorithm class (which you give arguments from your input # window)
 │   └── knapsack_input.ui     
 │   └── knapsack_input_GEN.py # the optional .ui file is created from the qtdesigner GUI., and the *_GEN.py is generated from that.
 ├── gui.py # Add your window to ALG_TO_WINDOW and take a look at on_alg_btn()

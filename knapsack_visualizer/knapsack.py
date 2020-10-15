@@ -55,7 +55,6 @@ class LCS():
     def get_cell_parents(self, row, col):
         if row==0 or col==0:
             return [(0, 0)]
-        return self._lcs_path()
         return [self.pars[row, col]]
     
     def _lcs_path(self):

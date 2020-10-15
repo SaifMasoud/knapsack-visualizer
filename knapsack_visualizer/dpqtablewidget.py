@@ -41,19 +41,19 @@ class DPQTableWidget(QTableWidget):
             self.unhighlight()
 
         # Reveal & highlight parents
-        selected.setBackground(QColor("Light Grey"))
+        selected.setBackground(QColor("Light Blue"))
         selected.setText(self.window.alg.get_cell_value(row, col))
         self.cur = selected
         cur_pars = self.window.alg.get_cell_parents(row, col)
         pars_qtable_elems = [self.item(par[0], par[1]) for par in cur_pars] # gets the QTableWidgetItem from its row and col
         self.highlight(pars_qtable_elems)
-        self.highlighted.extend(pars_qtable_elems)
+        self.highlighted.extend(pars_qtable_elems + [selected]) # keep track of whats highlighted to unmark it later.
 
     def unhighlight(self):
         try:
             if self.highlighted:
                 for par in self.highlighted:
-                    par.setBackground(QColor("Light Grey"))
+                    par.setBackground(QColor("White"))
                 self.highlighted = []
         except RuntimeError:  # Usually is the item being deleted due to new items
             self.highlighted = []
@@ -64,7 +64,7 @@ class DPQTableWidget(QTableWidget):
         for par in par_table_items:
             par.setText(self.window.alg.get_cell_value(par.row(), par.column()))
             par.setBackground(QColor("Red"))
-        par_table_items[0].setBackground(QColor("Yellow")) # the first parent is the correct one. (Color it yellow not red).
+        par_table_items[0].setBackground(QColor("Green")) # the first parent is the correct one. (Color it green not red).
 
     def set_all_0(self):
         for row in range(self.rowCount()):

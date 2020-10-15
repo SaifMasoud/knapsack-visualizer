@@ -9,6 +9,7 @@ import alg_input_windows
 
 # Constants
 ALG_TO_WIN = {"knapsack": knapsack_input_window.win, "lcs": lcs_input_window.win, "k_knapsack": kslot_knapsack_input_window.win}
+SPEED = 500
 
 class Window(QMainWindow):
     def __init__(self):
@@ -28,6 +29,7 @@ class Window(QMainWindow):
         # Connecting the buttons to their functions
         self.ui.alg_btn.clicked.connect(self.on_alg_btn)
         self.ui.cleardp_btn.clicked.connect(self.on_cleardp_btn)
+        self.ui.show_sol_btn.clicked.connect(self.on_show_sol_btn)
 
     def on_alg_btn(self):
         chosen_alg_name = self.ui.alg_box.currentText()
@@ -40,8 +42,9 @@ class Window(QMainWindow):
             "Usage",
             "Row number represents capacity for that row. Columns represent the items (A column can include its own item and any items to its left.). Use Arrow Keys to reveal the solutions.\n\nLight Gray: Solved\nYellow: Better option\nRed: Worse option.\n\nFollow the yellow from a cell to trace back the solution, straight left means to skip an item and left+up means to take the current item.",
         )
-
-    def update_dp_table(self):
+    
+    def on_show_sol_btn(self):
+        """ Shows solution step-by-step. """
         self.ui.dp_table.setColumnCount(len(self.alg.gui_horizontal_headers))
         self.ui.dp_table.setRowCount(len(self.alg.gui_vert_headers))
         self.ui.dp_table.setHorizontalHeaderLabels(self.alg.gui_horizontal_headers)
@@ -54,11 +57,13 @@ class Window(QMainWindow):
                 cur_item = QTableWidgetItem()
                 cur_item.setText(self.alg.get_cell_value(row, col))
                 self.ui.dp_table.setItem(row, col, cur_item)
-                cur_item.setBackground(QColor("Blue"))
-                loop = QEventLoop()
-                QTimer.singleShot(500, loop.quit)
-                loop.exec_()
                 self.ui.dp_table.reveal(cur_item)
+                loop = QEventLoop()
+                QTimer.singleShot(SPEED, loop.quit)
+                loop.exec_()
+
+    def update_dp_table(self):
+        pass # Deprecated function
 
 def main():
     # connect

@@ -40,8 +40,8 @@ class win(QMainWindow):
             vals.append(int(self.ui.input_table.item(item_row, 2).text()))
             print("Weights, vals: ", weights, vals)
         self.main_window.alg = knapsack.KnapSack(weights, vals, size=self.ui.size_box.currentIndex()+1)
-        self.main_window.update_dp_table()
         self.close()
+        self.main_window.update_dp_table()
 
     def on_num_items_change(self):
         self.ui.input_table.setRowCount(self.ui.num_items_box.currentIndex() + 1)

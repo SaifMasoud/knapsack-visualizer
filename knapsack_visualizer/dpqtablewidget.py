@@ -45,7 +45,6 @@ class DPQTableWidget(QTableWidget):
         selected.setText(self.window.alg.get_cell_value(row, col))
         self.cur = selected
         cur_pars = self.window.alg.get_cell_parents(row, col)
-        print(f"cur_pars: {cur_pars}")
         pars_qtable_elems = [self.item(par[0], par[1]) for par in cur_pars] # gets the QTableWidgetItem from its row and col
         self.highlight(pars_qtable_elems)
         self.highlighted.extend(pars_qtable_elems)

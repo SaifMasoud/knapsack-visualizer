@@ -51,6 +51,7 @@ class LCS():
         elif self.pars[row, col] == (row-1, col):
             return "↑ " + str(self.dp[row][col])
         return "← " + str(self.dp[row][col])
+        
     def get_cell_parents(self, row, col):
         if row==0 or col==0:
             return [(0, 0)]

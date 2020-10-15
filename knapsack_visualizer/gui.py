@@ -1,7 +1,9 @@
 import sys
 from knapsack_layout_GEN import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QTableWidgetItem, QMessageBox, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import (QApplication, QWidget, QMainWindow, QTableWidgetItem, QMessageBox, QVBoxLayout, QHBoxLayout)
+from PyQt5.QtCore import QEventLoop, QTimer
 from PyQt5 import QtWidgets
+from PyQt5.QtGui import QColor
 from alg_input_windows import *
 import alg_input_windows
 
@@ -52,6 +54,11 @@ class Window(QMainWindow):
                 cur_item = QTableWidgetItem()
                 cur_item.setText(self.alg.get_cell_value(row, col))
                 self.ui.dp_table.setItem(row, col, cur_item)
+                cur_item.setBackground(QColor("Blue"))
+                loop = QEventLoop()
+                QTimer.singleShot(500, loop.quit)
+                loop.exec_()
+                self.ui.dp_table.reveal(cur_item)
 
 def main():
     # connect

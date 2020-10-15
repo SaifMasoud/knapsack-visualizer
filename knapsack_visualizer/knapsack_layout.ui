@@ -56,6 +56,18 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="status_lbl">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#fc0000;&quot;&gt;Status: Not Ready (Choose an algorithm Above)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3"/>
       </item>
       <item>

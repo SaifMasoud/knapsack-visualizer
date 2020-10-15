@@ -12,6 +12,15 @@ ALG_TO_WIN = {"knapsack": knapsack_input_window.win, "lcs": lcs_input_window.win
 SPEED = 500
 
 class Window(QMainWindow):
+
+    def event(self, e):
+        super().event(e)
+        if self.alg:
+            self.ui.status_lbl.setText("Status: Ready (click show solution below).")
+            self.ui.status_lbl.setStyleSheet("color: green;")
+            return True
+        return True
+
     def __init__(self):
         self.alg = None
         super().__init__()

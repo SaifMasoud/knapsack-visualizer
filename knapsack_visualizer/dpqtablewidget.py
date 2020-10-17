@@ -6,7 +6,7 @@ class DPQTableWidget(QTableWidget):
     def __init__(self, layout):
         super().__init__(layout)
         self.highlighted = []
-        self.cur = None
+        self.cur_rowcol = None
         self.window = None
         # self.setVerticalHeaderLabels([str(i) for i in range(SIZE + 1)])  # make the rows start at 0->SIZE
         # self.setHorizontalHeaderLabels([" " + str(i) for i in range(NUM_ITEMS + 1)])
@@ -25,38 +25,34 @@ class DPQTableWidget(QTableWidget):
             print("Was Highlighted: ", self.highlighted)
             selected = self.selectedItems()[0]
             if selected:
-                self.reveal(selected)
+                self.reveal(selected.row(), selected.column())
             print("Now Highlighted: ", self.highlighted)
         return True
 
-    def reveal(self, selected):
-        if self.cur:
-            if selected is self.cur:
-                print("Same item")
-                return
-        row, col = selected.row(), selected.column()
-
+    def reveal(self, row, col):
+        print(f"reveal: row, col {row, col}")
         # Clean up: if there was another item revealed, unmark its parents
-        if (self.cur and selected != self.cur):  
+        if (self.cur_rowcol and (row, col) != self.cur_rowcol):  
             self.unhighlight()
 
         # Reveal & highlight parents
-        selected.setBackground(QColor("Light Blue"))
-        selected.setText(self.window.alg.get_cell_value(row, col))
-        self.cur = selected
+        tmp_item = QTableWidgetItem()
+        tmp_item.setBackground(QColor("Light Blue"))
+        tmp_item.setText(self.window.alg.get_cell_value(row, col))
+        self.setItem(row, col, tmp_item)
+        self.cur_rowcol = row, col
         cur_pars = self.window.alg.get_cell_parents(row, col)
         pars_qtable_elems = [self.item(par[0], par[1]) for par in cur_pars] # gets the QTableWidgetItem from its row and col
         self.highlight(pars_qtable_elems)
-        self.highlighted.extend(pars_qtable_elems + [selected]) # keep track of whats highlighted to unmark it later.
+        self.highlighted.extend(pars_qtable_elems + [tmp_item]) # keep track of whats highlighted to unmark it later.
 
     def unhighlight(self):
-        try:
-            if self.highlighted:
-                for par in self.highlighted:
-                    par.setBackground(QColor("White"))
-                self.highlighted = []
-        except RuntimeError:  # Usually is the item being deleted due to new items
-            self.highlighted = []
+        for q_cell in self.highlighted:
+            try:
+                q_cell.setBackground(QColor("White"))
+            except RuntimeError:  # Usually is the item being deleted due to new items
+                pass
+        self.highlighted = []
 
     def highlight(self, par_table_items):
         if len(par_table_items)==0: return

@@ -68,12 +68,6 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
-      </item>
-      <item>
-       <widget class="DPQTableWidget" name="dp_table"/>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="show_sol_btn">
@@ -86,6 +80,55 @@
          <widget class="QPushButton" name="cleardp_btn">
           <property name="text">
            <string>Clear Solution</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      </item>
+      <item>
+       <widget class="DPQTableWidget" name="dp_table"/>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="step_back_btn">
+          <property name="text">
+           <string>Step Back</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pause_btn">
+          <property name="text">
+           <string>Play/Pause</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="speed_slider">
+          <property name="maximumSize">
+           <size>
+            <width>797</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>3000</number>
+          </property>
+          <property name="singleStep">
+           <number>100</number>
+          </property>
+          <property name="pageStep">
+           <number>100</number>
+          </property>
+          <property name="sliderPosition">
+           <number>1000</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>

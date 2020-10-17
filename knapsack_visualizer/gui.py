@@ -9,8 +9,11 @@ import alg_input_windows
 
 # Constants
 ALG_TO_WIN = {"knapsack": knapsack_input_window.win, "lcs": lcs_input_window.win, "k_knapsack": kslot_knapsack_input_window.win}
-SPEED = 500
+SPEED = 250
 
+
+# TODO: properly implement a way to track which (row, col) we're on and how to find next/prev one.
+#       Avoid RuntimeError & clean up a bit.
 class Window(QMainWindow):
 
     def event(self, e):
@@ -27,6 +30,7 @@ class Window(QMainWindow):
         self.title = "KnapSack Visualizer"
         self.initUI()
         self.setGeometry(100, 100, 800, 600)
+        self.paused = False
 
     def initUI(self):
         # Adding UI widgets to the window
@@ -39,6 +43,18 @@ class Window(QMainWindow):
         self.ui.alg_btn.clicked.connect(self.on_alg_btn)
         self.ui.cleardp_btn.clicked.connect(self.on_cleardp_btn)
         self.ui.show_sol_btn.clicked.connect(self.on_show_sol_btn)
+        self.ui.pause_btn.clicked.connect(self.on_pause_btn)
+        self.ui.step_back_btn.clicked.connect(self.on_step_back_btn)
+    
+    def on_step_back_btn(self):
+        self.paused = True
+        row, col = self.prev_dp_cell()
+        print(f"on_back: trying to reveal {row, col}")
+        self.ui.dp_table.reveal(row, col)
+
+    def on_pause_btn(self):
+        self.paused = not self.paused
+        self.on_show_sol_btn()
 
     def on_alg_btn(self):
         chosen_alg_name = self.ui.alg_box.currentText()
@@ -54,22 +70,45 @@ class Window(QMainWindow):
     
     def on_show_sol_btn(self):
         """ Shows solution step-by-step. """
+        if self.paused: return
         self.ui.dp_table.setColumnCount(len(self.alg.gui_horizontal_headers))
         self.ui.dp_table.setRowCount(len(self.alg.gui_vert_headers))
         self.ui.dp_table.setHorizontalHeaderLabels(self.alg.gui_horizontal_headers)
         self.ui.dp_table.setVerticalHeaderLabels(self.alg.gui_vert_headers)
-        self.ui.dp_table.set_all_0()
 
         # Display solution in dp_table
-        for col in range(self.ui.dp_table.columnCount()):
-            for row in range(self.ui.dp_table.rowCount()):
-                cur_item = QTableWidgetItem()
-                cur_item.setText(self.alg.get_cell_value(row, col))
-                self.ui.dp_table.setItem(row, col, cur_item)
-                self.ui.dp_table.reveal(cur_item)
-                loop = QEventLoop()
-                QTimer.singleShot(SPEED, loop.quit)
-                loop.exec_()
+        while self.next_dp_cell():
+            if self.paused: return
+            print(f"on_show: Trying to reveal at {self.next_dp_cell()}")
+            row, col = self.next_dp_cell()
+            speed = self.ui.speed_slider.value()
+            self.ui.dp_table.reveal(row, col)
+            loop = QEventLoop()
+            QTimer.singleShot(speed, loop.quit)
+            loop.exec_()
+
+    def prev_dp_cell(self):
+        if not self.ui.dp_table.cur_rowcol:
+            return
+        row, col = self.ui.dp_table.cur_rowcol
+        if 0 <= row - 1:
+            return (row-1, col)
+        elif 0 <= col - 1:
+            return (self.ui.dp_table.rowCount()-1, col-1)
+        return (0,0)
+
+    def next_dp_cell(self, reverse=False):
+        if not self.ui.dp_table.cur_rowcol:
+            self.ui.dp_table.set_all_0()
+            return (0, 0)
+        row, col = self.ui.dp_table.cur_rowcol
+        if 0 <= row + 1 < self.ui.dp_table.rowCount():
+            print(f"NEXT CELL: {row+1, col}")
+            return (row+1, col)
+        elif 0 <= col + 1 < self.ui.dp_table.columnCount():
+            print(f"NEXT CELL: {0, col+1}")
+            return (0, col+1)
+        return None
 
     def update_dp_table(self):
         pass # Deprecated function

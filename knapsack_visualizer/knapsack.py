@@ -148,6 +148,9 @@ class KSlotKnapSack:
     def get_cell_value(self, row, col):
         print("Getting ", (row, col))
         return str(self.dp[row][col])
+    
+    def get_cell_parents(self, row, col):
+        return [] # kind of complicated to find parents...
 
 class KSItem(object):
     def __init__(self, weight, value, filename=None):
@@ -165,3 +168,4 @@ if __name__ == '__main__':
     lcs = LCS("Hello", "Hillosoad")
     print(lcs._lcs_path())
     print(lcs.pars)
+    

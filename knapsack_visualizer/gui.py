@@ -16,6 +16,14 @@ SPEED = 250
 #       Avoid RuntimeError & clean up a bit.
 class Window(QMainWindow):
 
+    def __init__(self):
+        self.alg = None
+        super().__init__()
+        self.title = "KnapSack Visualizer"
+        self.initUI()
+        self.setGeometry(100, 100, 800, 600)
+        self.paused = False
+
     def event(self, e):
         super().event(e)
         if self.alg:
@@ -24,13 +32,6 @@ class Window(QMainWindow):
             return True
         return True
 
-    def __init__(self):
-        self.alg = None
-        super().__init__()
-        self.title = "KnapSack Visualizer"
-        self.initUI()
-        self.setGeometry(100, 100, 800, 600)
-        self.paused = False
 
     def initUI(self):
         # Adding UI widgets to the window
@@ -59,9 +60,11 @@ class Window(QMainWindow):
     def on_alg_btn(self):
         chosen_alg_name = self.ui.alg_box.currentText()
         self.inputwin = ALG_TO_WIN[chosen_alg_name](self)
+        self.ui.dp_table.reset_dp()
 
     def on_cleardp_btn(self):
         self.ui.dp_table.set_all_0()
+        self.ui.dp_table.cur_rowcol = (0, 0)
         QMessageBox.about(
             self,
             "Usage",
@@ -91,6 +94,7 @@ class Window(QMainWindow):
         if not self.ui.dp_table.cur_rowcol:
             return
         row, col = self.ui.dp_table.cur_rowcol
+        self.ui.dp_table.setItem(row, col, QTableWidgetItem("0"))
         if 0 <= row - 1:
             return (row-1, col)
         elif 0 <= col - 1:

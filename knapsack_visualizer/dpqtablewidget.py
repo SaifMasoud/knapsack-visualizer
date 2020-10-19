@@ -6,6 +6,7 @@ class DPQTableWidget(QTableWidget):
     def __init__(self, layout):
         super().__init__(layout)
         self.highlighted = []
+        self.setStyleSheet("gridline-color: #fffff8; font-size: 15pt;")
         self.cur_rowcol = None
         self.window = None
         # self.setVerticalHeaderLabels([str(i) for i in range(SIZE + 1)])  # make the rows start at 0->SIZE
@@ -45,7 +46,10 @@ class DPQTableWidget(QTableWidget):
         pars_qtable_elems = [self.item(par[0], par[1]) for par in cur_pars] # gets the QTableWidgetItem from its row and col
         self.highlight(pars_qtable_elems)
         self.highlighted.extend(pars_qtable_elems + [tmp_item]) # keep track of whats highlighted to unmark it later.
-
+    
+    def reset_dp(self):
+        self.set_all_0()
+        self.cur_rowcol = None
     def unhighlight(self):
         for q_cell in self.highlighted:
             try:

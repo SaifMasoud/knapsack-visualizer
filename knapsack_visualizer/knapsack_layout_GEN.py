@@ -70,6 +70,10 @@ class Ui_MainWindow(object):
         self.step_back_btn.setObjectName("step_back_btn")
         self.horizontalLayout_2.addWidget(self.step_back_btn)
         self.pause_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.pause_btn.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("res/play-line.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pause_btn.setIcon(icon)
         self.pause_btn.setObjectName("pause_btn")
         self.horizontalLayout_2.addWidget(self.pause_btn)
         self.speed_slider = QtWidgets.QSlider(self.centralwidget)
@@ -105,5 +109,4 @@ class Ui_MainWindow(object):
         self.show_sol_btn.setText(_translate("MainWindow", "Show Solution"))
         self.cleardp_btn.setText(_translate("MainWindow", "Clear Solution"))
         self.step_back_btn.setText(_translate("MainWindow", "Step Back"))
-        self.pause_btn.setText(_translate("MainWindow", "Play/Pause"))
 from dpqtablewidget import DPQTableWidget

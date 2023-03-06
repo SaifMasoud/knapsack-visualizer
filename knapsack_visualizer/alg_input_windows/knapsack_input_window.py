@@ -34,12 +34,13 @@ class win(QMainWindow):
         self.show()
     
     def on_done_btn(self):
-        weights, vals = [], []
+        names, weights, vals = [], [], []
         for item_row in range(self.ui.input_table.rowCount()):
+            names.append(self.ui.input_table.item(item_row, 0).text())
             weights.append(int(self.ui.input_table.item(item_row, 1).text()))
             vals.append(int(self.ui.input_table.item(item_row, 2).text()))
             print("Weights, vals: ", weights, vals)
-        self.main_window.alg = knapsack.KnapSack(weights, vals, size=self.ui.size_box.currentIndex()+1)
+        self.main_window.alg = knapsack.KnapSack(weights, vals, size=self.ui.size_box.currentIndex()+1, names=names)
         self.close()
         self.main_window.update_dp_table()
 

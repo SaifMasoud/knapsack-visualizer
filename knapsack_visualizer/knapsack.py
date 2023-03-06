@@ -1,4 +1,7 @@
 
+from typing import List
+
+
 class ReplaceMeWithAnAlgorithm:
     """Template for creating new algorithms that can be displayed in the GUI."""
     
@@ -70,7 +73,8 @@ class LCS():
 class KnapSack():
     """Implements the KnapSack algorithm and stores data for GUI to make use of."""
 
-    def __init__(self, weights, values, size=0):
+    def __init__(self, weights, values, size=0, names: List[str] = None):
+        self.names = names
         self.items = []
         self.pars = {}
         self.build_and_solve(weights, values, size)
@@ -104,7 +108,7 @@ class KnapSack():
     def build_and_solve(self, weights, values, size, filenames=None):
         self._build_from_lists(weights, values, size, filenames)
         self.solve()
-        self.gui_horizontal_headers = [str(item.value) for item in self.items]
+        self.gui_horizontal_headers = [(str(item.value) + f" ({self.names[i]})") for (i, item) in enumerate(self.items)]
         self.gui_vert_headers = [str(i) for i in range(self.size+1)]
     
     def dp_parents_sorted(self, row, col):
